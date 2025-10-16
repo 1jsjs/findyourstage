@@ -6,7 +6,7 @@ from datetime import datetime, timedelta, timezone
 from typing import Optional, Dict, List
 
 from dotenv import load_dotenv
-load_dotenv()  # .env 파일을 환경변수로 로드 (로컬 개발용)
+load_dotenv()  # 로컬 개발 시 backend/.env 로드, 배포(Render)에서는 무시되고 환경변수 사용
 
 import jwt
 import requests
@@ -21,14 +21,26 @@ KOPIS_API_KEY = os.environ.get("KOPIS_API_KEY")
 JWT_SECRET = os.environ.get("JWT_SECRET")
 JWT_ALG = os.environ.get("JWT_ALG", "HS256")
 JWT_TTL_MIN = int(os.environ.get("JWT_TTL_MIN", "10"))  # default 10 minutes
+
+# 문자열 목록 기반 허용(정확히 일치하는 오리진)
 ALLOWED_ORIGINS = [
     o.strip() for o in os.environ.get("ALLOWED_ORIGINS", "").split(",") if o.strip()
 ] or [
+    # 로컬 개발
     "http://localhost:5173",
+    "http://localhost:5174",
+    # 최종 도메인
     "https://findyourstage.net",
     "https://www.findyourstage.net",
-    "https://*.vercel.app",
+    # 특정 Vercel 프로덕션 도메인을 알고 있으면 여기에 추가
+    "https://findyourstage.vercel.app",
 ]
+
+# 정규식 기반 허용(프리뷰 포함 모든 vercel.app 서브도메인 허용)
+ALLOWED_ORIGIN_REGEX = os.environ.get(
+    "ALLOWED_ORIGIN_REGEX",
+    r"https://.*\.vercel\.app$"  # 예: https://findyourstage-git-main-xxxxx.vercel.app
+)
 
 if not KOPIS_API_KEY:
     raise RuntimeError("Missing env: KOPIS_API_KEY")
@@ -43,6 +55,7 @@ app = FastAPI(title="FindYourStage Backend", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=ALLOWED_ORIGINS,
+    allow_origin_regex=ALLOWED_ORIGIN_REGEX,  # ★ vercel 프리뷰/브랜치 도메인까지 허용
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
