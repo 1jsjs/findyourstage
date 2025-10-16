@@ -1,0 +1,49 @@
+# === OS / 시스템 파일 ===
+.DS_Store
+Thumbs.db
+._*
+
+# === IDE / 편집기 설정 ===
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# === Node / Frontend ===
+node_modules/
+dist/
+frontend/node_modules/
+frontend/dist/
+*.local
+*.tsbuildinfo
+.cache/
+
+# === Python / Backend ===
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+backend/.venv/
+backend/venv/
+backend/__pycache__/
+
+# === Logs ===
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# === Environment / Key ===
+.env
+*.env
+.env.local
+.env.*.local
+backend/.env
+frontend/.env.local
+
+# === 기타 ===
+coverage/
+build/
