@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(tree:*)",
+      "Bash(.venv/bin/python:*)",
+      "Bash(.venv/bin/pip install:*)",
+      "Bash(.venv/bin/uvicorn:*)",
+      "Bash(chmod:*)",
+      "Bash(./test_api.sh:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
